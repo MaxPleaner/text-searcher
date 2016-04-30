@@ -1,25 +1,40 @@
-
 module GeniusSearchTests
+
+  module BenchmarkCache
+    @@cache = {}
+    def self.add(method_name, benchmark_result)
+      @@cache[method_name] = benchmark_result
+    end
+    def self.cache
+      @@cache
+    end
+  end
+
   # Define a custom error class which can be raised anywhere in the code
   class AssertionNotMetError < StandardError
   end
 
   def benchmark(test_case_name, num_repetitions)
     silence_output
-    result = Benchmark.bm do |x|
-      x.report do 
-        num_repetitions.times.each { send(test_case_name) }
+    cached_result = BenchmarkCache.cache[test_case_name]
+    if cached_result
+      result = cached_result
+    else
+      result = Benchmark.bm do |x|
+        x.report do 
+          num_repetitions.times.each { send(test_case_name) }
+        end
       end
     end
     enable_output
     puts "#{test_case_name} benchmark results: ".white_on_black
-    puts result
+    puts cached_result || result
   end
 
   # The base assertion method ("does x equal y?") used in tests
   def assert_equals(expected, actual, test_name="")
     if expected.eql?(actual)
-        puts "#{test_name} passed".green
+        puts "    " + "#{test_name} passed".green_on_black
     else
       if options[:raise_error_on_failed_test]
         raise(AssertionNotMetError, "Expected #{expected} but was #{actual}")

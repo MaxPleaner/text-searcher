@@ -29,7 +29,7 @@ module GeniusSearchTests
 
   def test_searching_for_single_letter
     assert_equals(
-      ["Rihanna", "Drake", "The Game", "Lana Del Rey", "Kanye West", "Fetty Wap", "Kendrick Lamar", "Panic! At The Disco", "Cam'ron", "Tyler, The Creator"],
+      ["Rihanna", "Drake", "The Game", "Lana Del Rey", "Kanye West", "Adele", "Fetty Wap", "Kendrick Lamar", "Panic! At The Disco", "Cam'ron", "Tyler, The Creator", "AAA"],
       search('a'),
      "Searching for letter A"
     )
@@ -43,13 +43,33 @@ module GeniusSearchTests
     )
   end
 
+
   def test_searching_for_single_letter_with_regex
     assert_equals(
-      ["Rihanna", "Drake", "The Game", "Lana Del Rey", "Kanye West", "Fetty Wap", "Kendrick Lamar", "Panic! At The Disco", "Cam'ron", "Tyler, The Creator"],
+      ["Rihanna", "Drake", "The Game", "Lana Del Rey", "Kanye West", "Adele", "Fetty Wap", "Kendrick Lamar", "Panic! At The Disco", "Cam'ron", "Tyler, The Creator", "AAA"],
       regex_search("a"),
       "Searching for letter A with regex"
     )
   end
+
+  def test_case_insensitivity
+    assert_equals(
+      ["AAA"], search("aaa"), "Case insensitivity"
+    )
+  end
+
+  def test_case_insensitivity_with_regex
+    assert_equals(
+      ["AAA"], regex_search("aaa"), "Regex case insensitivity"
+    )
+  end
+
+  def test_case_insensitivity_with_fuzzy_search
+    assert_equals(
+      ["AAA"], fuzzy_search("aaa"), "Fuzzy search case insensitivity"
+    )
+  end
+
 
   def test_using_regex_to_search_for_apostrophe_character
     assert_equals(["Cam'ron"], regex_search("'"), "Apostrophe regex search")
@@ -75,22 +95,22 @@ module GeniusSearchTests
     use_large_artists_list if @@cached_artists.length < 100
     assert_equals(
       search("a").length,
-      70772,
+      153728,
       "Searches large list for letter 'a'"
     )
     assert_equals(
       search("b").length,
-      69912,
+      121276,
       "Searches large list for letter 'b'"
     )
     assert_equals(
       search("A").length,
-      114908,
+      153728,
       "Searches large list for letter 'A'"
     )
     assert_equals(
       search("B").length,
-      70175,
+      121276,
       "Searches large list for letter 'B'"
     )    
     use_small_artists_list
@@ -126,22 +146,22 @@ module GeniusSearchTests
     use_large_artists_list if @@cached_artists.length < 100
     assert_equals(
       regex_search("a").length,
-      70772,
+      153728,
       "Regex searches large list for letter 'a'"
     )
     assert_equals(
       regex_search("b").length,
-      69912,
+      121276,
       "Regex searches large list for letter 'b'"
     )
     assert_equals(
       regex_search("A").length,
-      114908,
+      153728,
       "Regex searches large list for letter 'A'"
     )
     assert_equals(
       regex_search("B").length,
-      70175,
+      121276,
       "Regex searches large list for letter 'B'"
     )    
     use_small_artists_list

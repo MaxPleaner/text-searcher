@@ -38,16 +38,23 @@ module GeniusSearch
 
   def search(query)
     cached_artists.select do |artist|
-      artist.include?(query)
+      artist.downcase.include?(query.downcase)
     end
   end
 
   def regex_search(query)
-    regex = query.gsub(" ", '\s')
-                 .gsub(".", '\.')
-                 .gsub(",", '\,')
+    # One way to write a regex:
+      # regex_str = query.gsub(" ", '\s')
+      #                  .gsub(".", '\.')
+      #                  .gsub(",", '\,')
+      #                  .gsub("!", '/!')
+      # regex = /#{regex_str}/i
+    # A nicer way:
+    regex = Regexp.new(
+      Regexp.escape(query), Regexp::IGNORECASE
+    )
     cached_artists.select do |company|
-      company =~ /#{regex}/
+      company =~ regex
     end
   end
 

@@ -18,14 +18,22 @@ module GeniusSearchTests
 end
 
 module TestRunner
+  # GeniusSearchTests is defined thoughout the codebase
   extend GeniusSearchTests
-  def self.run_tests
-    puts "* * Genius Search Tests * *".white_on_black
-    puts "\n"
+
+  def self.set_options
     set_option(
       :raise_error_on_failed_test, true
     ) if ARGV.include?("--raise-error-on-failure")
-    [
+    set_option(
+      :shuffle_tests, true
+    ) unless ARGV.include?("--dont-shuffle-tests")
+  end
+
+  def self.run_tests
+    puts "* * Genius Search Tests * *".white_on_black
+    puts "\n"
+    tests_list = [
       :test_finding_lana_del_rey_by_name,
       :test_finding_all_artists_by_name,
       :test_finding_all_artists_by_name_with_fuzzy_search,
@@ -43,12 +51,21 @@ module TestRunner
       :test_searching_for_single_letter_with_large_list_using_regex,
       :benchmark_performance_of_searching_for_single_letter,
       :benchmark_searching_for_single_letter_with_large_list
-    ].each { |test_name| pretty_test_run(test_name) }
+    ]
+    if options[:shuffle_tests]
+      tests_list = tests_list.shuffle
+    end
+    tests_list.each { |test_name| run_test(test_name) }
   end
-  def self.pretty_test_run(test_name)
-    puts test_name.to_s.blue
-    send(test_name)
+
+  def self.run_test(test_name)
+    puts test_name.to_s.blue_on_black
+    benchmark_result = Benchmark.bm do |x|
+      x.report { send(test_name) }
+    end
+    GeniusSearchTests::BenchmarkCache.add(test_name, benchmark_result)
   end
+
 end
 
 # Execute this block if this file is run directly. 
