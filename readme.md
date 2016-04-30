@@ -1,6 +1,8 @@
-GeniusSearchTests is a module which contains all this application's code.
+GeniusSearchTests is a module which contains all this application's test code.
 
-Parts of it are defined in all of the .rb files in this directory. 
+Parts of it are defined throuhout the .rb files in this directory. 
+
+The search module is GeniusSearch, defined in [search.rb](search.rb)
 
 To run the tests:
 
