@@ -13,6 +13,8 @@ module GeniusSearch
     nil # don't show output!
   end
 
+  # this method is automatically called 
+  # when this module is included
   def self.included(module_which_includes)
     use_artists_list("./artists.yml")
   end
@@ -29,6 +31,7 @@ module GeniusSearch
     @@cached_artists
   end
 
+  # dont reinitialize this, it takes time
   def cached_fuzzy_matcher
     @@cached_fuzzy_matcher
   end

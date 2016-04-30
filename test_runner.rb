@@ -6,6 +6,7 @@ require 'benchmark'
 require_relative("./test_helpers.rb")
 require_relative("./tests.rb")
 
+# Allow the module to have options set
 module GeniusSearchTests
   @@options = {}
   def options
@@ -50,6 +51,10 @@ module TestRunner
   end
 end
 
+# Execute this block if this file is run directly. 
+# I.e. ruby <this_file.rb>
+# This block will not run if this file is required
+# or loaded. 
 if __FILE__ == $0
   TestRunner.run_tests
 end

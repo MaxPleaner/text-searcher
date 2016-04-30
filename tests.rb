@@ -72,7 +72,7 @@ module GeniusSearchTests
   end
 
   def test_searching_for_single_letter_with_large_list
-    use_large_artists_list
+    use_large_artists_list if @@cached_artists.length < 100
     assert_equals(
       search("a").length,
       70772,
@@ -98,7 +98,7 @@ module GeniusSearchTests
 
   # Fuzzy search is case-insensitive
   def test_searching_for_single_letter_with_large_list_using_fuzzy_search
-    use_large_artists_list
+    use_large_artists_list if @@cached_artists.length < 100
     assert_equals(
       fuzzy_search("a").length,
       153728,
@@ -123,7 +123,7 @@ module GeniusSearchTests
   end
 
   def test_searching_for_single_letter_with_large_list_using_regex
-    use_large_artists_list
+    use_large_artists_list if @@cached_artists.length < 100
     assert_equals(
       regex_search("a").length,
       70772,
@@ -160,9 +160,11 @@ module GeniusSearchTests
   end
 
   def benchmark_searching_for_single_letter_with_large_list
+    use_large_artists_list
     benchmark(:test_searching_for_single_letter_with_large_list_using_regex, 1)
     benchmark(:test_searching_for_single_letter_with_large_list_using_fuzzy_search, 1)
     benchmark(:test_searching_for_single_letter_with_large_list, 1)
+    use_small_artists_list
   end
 
 end
