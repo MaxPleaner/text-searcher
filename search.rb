@@ -2,22 +2,27 @@ require 'fuzzy_match' # https://github.com/seamusabshere/fuzzy_match
 require 'yaml'
 
 module GeniusSearch
-  def self.included(module_which_includes)
+
+  def self.use_artists_list(file)
     @@cached_artists = YAML.load(
-      File.read("./artists.yml")
+      File.read(file)
     )
     @@cached_fuzzy_matcher = FuzzyMatch.new(
-      @@cached_artists
+      @@cached_artists, { must_match_groupings: true }
     )
+    nil # don't show output!
+  end
+
+  def self.included(module_which_includes)
+    use_artists_list("./artists.yml")
   end
 
   def use_large_artists_list
-    @@cached_artists = YAML.load(
-      File.read("./large_artists_list.yml")
-    )
-    @@cached_fuzzy_matcher = FuzzyMatch.new(
-      @@cached_artists
-    )
+    GeniusSearch.use_artists_list("./large_artists_list.yml")
+  end
+
+  def use_small_artists_list
+    GeniusSearch.use_artists_list("./artists.yml")
   end
 
   def cached_artists
@@ -30,7 +35,7 @@ module GeniusSearch
 
   def search(query)
     cached_artists.select do |artist|
-      includes_match?(artist, query)
+      artist.include?(query)
     end
   end
 
@@ -49,11 +54,4 @@ module GeniusSearch
     ).map(&:first)
   end
 
-  private
-    def regex_match?(a,b)
-      a =~ b
-    end
-    def includes_match?(a,b)
-      a.include?(b)
-    end
 end

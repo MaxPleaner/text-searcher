@@ -1,1 +1,15 @@
+I have three implementations of "search""
 
+  - simple search using `includes?`
+  - regex search
+  - search using "fuzzy_match" gem
+
+I test them in the following ways:
+
+  - test each individual artist name to ensure that it is the only result (for `includes?` and regex) or the first result (for fuzzy match )
+  - test searching for individual letters
+  - test searching for individual letters in large files. This uses the `large_artists_list.yml` file which has 250,000 randomly generated "artist" names. 
+  - Benchmark the different search methods
+
+It's evident that the fuzzy_match method is far, far 
+slower than others. 

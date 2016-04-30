@@ -72,16 +72,79 @@ module GeniusSearchTests
   end
 
   def test_searching_for_single_letter_with_large_list
-    set_option(:large_companies_list, true)
-    set_option(:large)
+    use_large_artists_list
+    assert_equals(
+      search("a").length,
+      70772,
+      "Searches large list for letter 'a'"
+    )
+    assert_equals(
+      search("b").length,
+      69912,
+      "Searches large list for letter 'b'"
+    )
+    assert_equals(
+      search("A").length,
+      114908,
+      "Searches large list for letter 'A'"
+    )
+    assert_equals(
+      search("B").length,
+      70175,
+      "Searches large list for letter 'B'"
+    )    
+    use_small_artists_list
   end
 
+  # Fuzzy search is case-insensitive
   def test_searching_for_single_letter_with_large_list_using_fuzzy_search
-    puts "unimplemented".yellow
+    use_large_artists_list
+    assert_equals(
+      fuzzy_search("a").length,
+      153728,
+      "Fuzzy searches large list for letter a"
+    )
+    assert_equals(
+      fuzzy_search("b").length,
+      121276,
+      "Fuzzy searches large list for letter b"
+    )
+    assert_equals(
+      fuzzy_search("A").length,
+      153728,
+      "Fuzzy searches large list for letter A"
+    )
+    assert_equals(
+      fuzzy_search("B").length,
+      121276,
+      "Fuzzy searches large list for letter B"
+    )
+    use_small_artists_list
   end
 
   def test_searching_for_single_letter_with_large_list_using_regex
-    puts "unimplemented".yellow
+    use_large_artists_list
+    assert_equals(
+      regex_search("a").length,
+      70772,
+      "Regex searches large list for letter 'a'"
+    )
+    assert_equals(
+      regex_search("b").length,
+      69912,
+      "Regex searches large list for letter 'b'"
+    )
+    assert_equals(
+      regex_search("A").length,
+      114908,
+      "Regex searches large list for letter 'A'"
+    )
+    assert_equals(
+      regex_search("B").length,
+      70175,
+      "Regex searches large list for letter 'B'"
+    )    
+    use_small_artists_list
   end
 
   def benchmark_performance_of_searching_for_single_letter
@@ -91,10 +154,15 @@ module GeniusSearchTests
     benchmark(
       :test_searching_for_single_letter_with_fuzzy_search, 500
     )
+    benchmark(
+      :test_searching_for_single_letter_with_regex, 500
+    )    
   end
 
   def benchmark_searching_for_single_letter_with_large_list
-    puts "unimplemented".yellow
+    benchmark(:test_searching_for_single_letter_with_large_list_using_regex, 1)
+    benchmark(:test_searching_for_single_letter_with_large_list_using_fuzzy_search, 1)
+    benchmark(:test_searching_for_single_letter_with_large_list, 1)
   end
 
 end
