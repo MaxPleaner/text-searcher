@@ -1,0 +1,17 @@
+GEM
+  remote: http://rubygems.org/
+  specs:
+    byebug (8.2.5)
+    colored (1.2)
+    fuzzy_match (2.1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  byebug
+  colored
+  fuzzy_match
+
+BUNDLED WITH
+   1.11.2
