@@ -21,13 +21,13 @@ module TestRunner
   # GeniusSearchTests is defined thoughout the codebase
   extend GeniusSearchTests
 
-  def self.set_options
+  def self.set_options(command_line_args)
     set_option(
       :raise_error_on_failed_test, true
-    ) if ARGV.include?("--raise-error-on-failure")
+    ) if command_line_args.include?("--raise-error-on-failure")
     set_option(
       :shuffle_tests, true
-    ) unless ARGV.include?("--dont-shuffle-tests")
+    ) if command_line_args.include?("--shuffle-tests")
   end
 
   def self.run_tests
@@ -60,9 +60,11 @@ module TestRunner
 
   def self.run_test(test_name)
     puts test_name.to_s.blue_on_black
+    silence_output
     benchmark_result = Benchmark.bm do |x|
-      x.report { send(test_name) }
+      x.report { enable_output; send(test_name); silence_output; }
     end
+    enable_output
     GeniusSearchTests::BenchmarkCache.add(test_name, benchmark_result)
   end
 
@@ -73,5 +75,6 @@ end
 # This block will not run if this file is required
 # or loaded. 
 if __FILE__ == $0
+  TestRunner.set_options(ARGV)
   TestRunner.run_tests
 end

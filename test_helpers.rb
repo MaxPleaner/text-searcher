@@ -18,17 +18,21 @@ module GeniusSearchTests
     silence_output
     cached_result = BenchmarkCache.cache[test_case_name]
     if cached_result
-      result = cached_result
+      result = [cached_result[0] * num_repetitions]
     else
       result = Benchmark.bm do |x|
         x.report do 
-          num_repetitions.times.each { send(test_case_name) }
+          send(test_case_name)
         end
       end
+      BenchmarkCache.add(test_case_name, result)
+      result = [result[0] * num_repetitions]
     end
     enable_output
-    puts "#{test_case_name} benchmark results: ".white_on_black
-    puts cached_result || result
+    print "#{test_case_name} benchmark results".white_on_black
+    print "#{" (cached)" if cached_result}\n".white_on_black
+    puts "  #{num_repetitions} repetitions".white_on_black
+    puts result[0].to_s.white_on_black
   end
 
   # The base assertion method ("does x equal y?") used in tests

@@ -8,3 +8,5 @@ To run the tests:
 
   1. `bundle install`
   2. ` bundle exec ruby test_runner.rb`
+
+See [plan.txt](plan.txt) for some info about the tests which I wrote. 
